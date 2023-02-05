@@ -27,7 +27,7 @@ function getTime() {
   let hoursAMPM = hours > 12 ? hours - 12 : hours;
 
   // додаємо нулі якщо значення <10
-  hoursEl.textContent = hoursAMPM < 10 ? '0' + hours : (hoursEl.textContent = hours);
+  hoursEl.textContent = hoursAMPM < 10 ? '0' + hoursAMPM : (hoursEl.textContent = hoursAMPM);
 
   minutesEl.textContent = minutes < 10 ? '0' + minutes : (minutesEl.textContent = minutes);
 
@@ -35,7 +35,7 @@ function getTime() {
 
   // додаємо трансформацію для зміщення кульки по шкалі
   slideHourEl.style.transform = `translateX(${hoursAMPM * (300 / 12)}px)`;
-  
+
   slideMinEl.style.transform = `translateX(${minutes * (300 / 60)}px)`;
 
   slideSecEl.style.transform = `translateX(${seconds * (300 / 60)}px)`;
