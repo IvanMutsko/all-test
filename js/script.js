@@ -1,37 +1,40 @@
-// const fetchUsersBtn = document.querySelector('.btn');
-// const userList = document.querySelector('.user-list');
+const movieToSave = 157336;
 
-// fetchUsersBtn.addEventListener('click', async () => {
-//   try {
-//     const users = await fetchUsers();
-//     renderUserListItems(users);
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// });
+// function add new movie in localStorage
+function addToWatched(movieId, string) {
+  const movieList = [];
 
-async function fetchUsers() {
-  const baseUrl = 'https://jsonplaceholder.typicode.com';
-  const userIds = [1, 2, 3, 4, 5];
+  try {
+    // перевірка чи пусте
+    const isEmpty = localStorage.getItem(`${string}`);
 
-  const arrayOfPromises = userIds.map(async userId => {
-    const response = await fetch(`${baseUrl}/users/${userId}`);
-    return response.json();
-  });
+    // якщо масив пустий то записуємо перший ключ та об'єкт з першим ІД
+    if (!isEmpty) {
+      movieList.push(movieId);
+      localStorage.setItem(`${string}`, JSON.stringify(movieList));
+      return;
+    }
 
-  const users = await Promise.all(arrayOfPromises);
-  return users;
+    // якщо є якісь дані то перевіряємо чи є в об'єкті таке значення
+    if (isEmpty.includes(movieId)) {
+      console.log('такий фільм є');
+      return;
+    }
+
+    // якщо фільма нема, треба його додати
+    // localStorage.getItem(watchedList)
+    const arr = JSON.parse(localStorage.getItem(`${string}`));
+
+    arr.push(movieId);
+
+    localStorage.setItem(`${string}`, JSON.stringify(arr));
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-// function renderUserListItems(users) {
-//   const markup = users
-//     .map(
-//       user => `<li class="item">
-//         <p><b>Name</b>: ${user.name}</p>
-//         <p><b>Email</b>: ${user.email}</p>
-//         <p><b>Company</b>: ${user.company.name}</p>
-//       </li>`
-//     )
-//     .join('');
-//   userList.innerHTML = markup;
-// }
+addToWatched(5555, 'watched');
+addToWatched(5555, 'qweqweqwe');
+addToWatched(7676767, 'qweqweqwe');
+
+// try/catch
