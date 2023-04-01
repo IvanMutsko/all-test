@@ -1,44 +1,139 @@
-// function of adding new movie to localStorage
-function addMovieToLocalStorage(keyLibrary, movieId) {
-  const movieList = [];
+// ============================================================
+// Уникальность всех символов в строке
 
-  try {
-    // checking for values
-    const isEmpty = localStorage.getItem(`${keyLibrary}`);
-    // if the array is empty - write down the first key and the array
-    if (!isEmpty) {
-      movieList.push(movieId);
-      localStorage.setItem(`${keyLibrary}`, JSON.stringify(movieList));
-      return;
-    }
-    // if there is any data - we check whether the array contains such a value
-    if (isEmpty.includes(movieId)) {
-      return;
-    }
-    // if there is no movie, we add movie
-    const arrMovieId = JSON.parse(localStorage.getItem(`${keyLibrary}`));
-    arrMovieId.push(movieId);
-    localStorage.setItem(`${keyLibrary}`, JSON.stringify(arrMovieId));
-  } catch (error) {
-    console.log(error);
-  }
+// Напишите функцию, которая определяет уникальны ли все символы в строке. Регистр должен учитываться: `‘a’` и `‘A’` разные символы.
+
+function isUnique(string) {
+  // 1
+  // for (let i = 0; i < string.length; i += 1) {
+  //   if (string.lastIndexOf(string[i]) !== i) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
+
+  // 2
+  return [...new Set(string)].join('') === string;
 }
 
-// function of deleting the movie from the localStorage
-function removeMovieFromLocalStorage(keyLibrary, movieId) {
-  try {
-    const arrMovieId = JSON.parse(localStorage.getItem(`${keyLibrary}`));
-    // looking for the index of the element to delete
-    const index = arrMovieId.indexOf(movieId);
-    // remove an element from the array
-    if (index !== -1) {
-      arrMovieId.splice(index, 1);
-      // updated array in LocalStorage
-      localStorage.setItem(`${keyLibrary}`, JSON.stringify(arrMovieId));
+// console.log(isUnique('abcdef')); // -> true
+// console.log(isUnique('1234567')); // -> true
+// console.log(isUnique('abcABC')); // -> true
+// console.log(isUnique('abcadef')); // -> false
+
+// ============================================================
+// Плоский массив
+
+// Напишите функцию, принимающая массив с вложенными массивами и распакуйте в результирующий плоский массов. В результате должны получить новый одномерный массив.
+
+function flatten(array) {
+  const res = [];
+
+  for (let i = 0; i < array.length; i += 1) {
+    if (!Array.isArray(array[i])) {
+      res.push(array[i]);
+    } else {
+      const flat = flatten(array[i]);
+      console.log(flat);
+      for (let j = 0; j < flat.length; j += 1) {
+        res.push(flat[j]);
+      }
     }
-  } catch (error) {
-    console.log(error);
   }
+  return res;
 }
 
-export { addMovieToLocalStorage, removeMovieFromLocalStorage };
+// console.log(flatten([[1], [[2, 3]], [[[[[4]]]]]])); // -> [1, 2, 3, 4]
+
+// ============================================================
+
+// Удаление всех повторяющихся значений в строке
+
+// Напишите функцию, которая принимает строку и возвращает новую, в которой все дублирующиеся символы будут удалены.
+
+function removeDupes(str) {
+  // 1
+  // let unic = '';
+  // for (let i = 0; i < str.length; i += 1) {
+  //   if (str.indexOf(str[i]) === i) {
+  //     unic += str[i];
+  //   }
+  // }
+  // return unic;
+
+  // 2
+  return [...new Set(str)].join('');
+}
+
+// console.log(removeDupes('abcd')); // -> 'abcd'
+// console.log(removeDupes('aabbccdd')); // -> 'abcd'
+// console.log(removeDupes('abcddbca')); // -> 'abcd'
+// console.log(removeDupes('abababcdcdcd')); // -> 'abcd'
+
+// ============================================================
+
+// Какая строка встречается чаще всего
+
+// Напишите функцию, которая принимает массив строк и возвращает самую частовстречающуюся строку в этом массиве. Если таких строк несколько, то нужно вернуть первую, идя слева на право.
+
+function highestFrequency(array) {
+  // 1
+  //   const resObj = {};
+  //   let maxValue = 0;
+  //   let result = '';
+
+  //   for (let i = 0; i < array.length; i += 1) {
+  //     resObj[array[i]] = 0;
+  //   }
+  //   for (let i = 0; i < array.length; i += 1) {
+  //     resObj[array[i]] += 1;
+  //   }
+
+  //   const arrKeys = Object.keys(resObj);
+  //   const arrValues = Object.values(resObj);
+
+  //   for (let i = 0; i < arrValues.length; i += 1) {
+  //     if (maxValue < arrValues[i]) {
+  //       maxValue = arrValues[i];
+  //       result = arrKeys[i];
+  //     }
+  //   }
+
+  //   return result;
+
+  // 2 (не моє рішення)
+  const resObj = new Map();
+  let maxValue = 0;
+  let result = '';
+
+  for (let i = 0; i < array.length; i += 1) {
+    if (!resObj.has(array[i])) {
+      resObj.set(array[i], 0);
+    }
+    resObj.set(array[i], resObj.get(array[i]) + 1);
+    if (resObj.get(array[i]) > maxValue) {
+      maxValue = resObj.get(array[i]);
+      result = array[i];
+    }
+  }
+  return result;
+}
+
+// console.log(highestFrequency(['a', 'b', 'c', 'c', 'c', 'd', 'e'])); // -> c
+// console.log(highestFrequency(['abc', 'def', 'abc', 'abc', 'def', 'abc'])); // -> abc
+// console.log(highestFrequency(['abc', 'def', 'abc', 'def'])); // -> abc
+// console.log(highestFrequency(['abc', 'abc', 'def', 'def', 'def', 'ghi', 'ghi', 'ghi', 'ghi'])); // -> ghi
+
+// ============================================================
+
+// Повернута ли строка ?
+
+// Напишите функцию, которая принимает 2 строки. Верните `true` если строки являются перевернутым вариантом друг друга (см. пример). Иначе верните `false`.
+
+function isStringRotated(source, test) {
+  // todo
+}
+
+console.log(isStringRotated('javascript', 'scriptjava')); // -> true
+console.log(isStringRotated('javascript', 'iptjavascr')); // -> true
+console.log(isStringRotated('javascript', 'java')); // -> false
